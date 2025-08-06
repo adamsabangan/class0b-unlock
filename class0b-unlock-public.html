@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Class 0B Unlock</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #login, #waiting {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #login {
+      display: flex;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    #waiting h1 {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="login">
+    <h2>Enter Username</h2>
+    <input type="text" id="username" placeholder="Username">
+    <button onclick="validateUser()">Submit</button>
+  </div>
+
+  <div id="waiting">
+    <h1>🔓 Waiting for tap...</h1>
+  </div>
+
+  <script>
+    document.getElementById("login").style.display = "flex";
+
+    function validateUser() {
+      const input = document.getElementById("username").value.trim().toLowerCase();
+      if (input === "adamsabangan") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("waiting").style.display = "flex";
+        checkAccess();
+      } else {
+        alert("Access denied.");
+      }
+    }
+
+    async function checkAccess() {
+      try {
+        const response = await fetch("https://api.jsonbin.io/v3/b/6892b7f57b4b8670d8ae485f/latest");
+        const result = await response.json();
+        const granted = result.record.access_granted;
+
+        if (granted === true) {
+          window.location.href = "https://www.adamsabangan.com/coredashboard";
+        } else {
+          setTimeout(checkAccess, 3000);
+        }
+      } catch (err) {
+        console.error("Error checking access:", err);
+        setTimeout(checkAccess, 3000);
+      }
+    }
+  </script>
+</body>
+</html>
